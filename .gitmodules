@@ -1,0 +1,3 @@
+[submodule "linux/third-party/libusbp"]
+	path = linux/third-party/libusbp
+	url = https://github.com/pololu/libusbp
