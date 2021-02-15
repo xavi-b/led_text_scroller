@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <libusb-1.0/libusb.h>
+#include <led_text_scroller.h>
 
 std::string serial_number_or_default(const libusbp::device& device, const std::string& def)
 {
@@ -123,6 +124,24 @@ int main_with_exceptions()
     {
         print_device(*it);
     }
+
+    std::shared_ptr<LedTextScroller> c = std::make_shared<LedTextScroller>();
+
+    std::string port_name;
+    std::string msg;
+
+    // std::cout << "Select port name (ex: /dev/ttyACM0): ";
+    // std::getline(std::cin, port_name);
+    // c->start(port_name.c_str());
+    c->start("/dev/ttyACM0");
+
+    while (true)
+    {
+        std::cout << "Enter message: ";
+        std::getline(std::cin, msg);
+        c->write_some(msg);
+    }
+
     return 0;
 }
 

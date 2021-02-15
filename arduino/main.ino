@@ -47,8 +47,8 @@ static const uint16_t PROGMEM ballcolor[3] = {
     0x1000  // Red=1
 };
 
-String nom = "Arduino";
-String msg = "";
+String name = "Arduino";
+String msg  = "";
 
 void readSerialPort()
 {
@@ -56,19 +56,17 @@ void readSerialPort()
     if (Serial.available())
     {
         delay(10);
-        while (Serial.available() > 0)
-        {
-            msg += (char)Serial.read();
-        }
+        msg = Serial.readStringUntil('\n');
         Serial.flush();
     }
 }
 
 void sendData()
 {
-    Serial.print(nom);
+    Serial.print(name);
     Serial.print(" received : ");
     Serial.print(msg);
+    Serial.print('\n');
 }
 
 void setup()
@@ -87,15 +85,13 @@ void loop()
     if (msg != "")
         sendData();
 
-    byte i;
-
     // Clear background
     matrix.fillScreen(0);
 
     // Draw big scrolly text on top
     matrix.setTextColor(matrix.ColorHSV(hue, 255, 255, true));
     matrix.setCursor(textX, 1);
-    //matrix.print(F2(str));
+    // matrix.print(F2(str));
     matrix.print(msg.c_str());
 
     // Move text left (w/wrap), increase hue

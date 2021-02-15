@@ -6,6 +6,7 @@
 #include <boost/system/error_code.hpp>
 #include <boost/system/system_error.hpp>
 #include <boost/bind/bind.hpp>
+#include <boost/thread.hpp>
 
 #include <usb.h>
 
@@ -15,7 +16,7 @@
 
 typedef std::shared_ptr<boost::asio::serial_port> serial_port_ptr;
 
-class LedTextScroller : std::enable_shared_from_this<LedTextScroller>
+class LedTextScroller : public std::enable_shared_from_this<LedTextScroller>
 {
 public:
     LedTextScroller();

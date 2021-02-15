@@ -51,6 +51,8 @@ bool LedTextScroller::start(const char* port_name, int baud_rate)
 
     async_read_some();
 
+    boost::thread t1(boost::bind(&boost::asio::io_service::run, &io_service_));
+
     return true;
 }
 
@@ -68,11 +70,12 @@ void LedTextScroller::stop()
 
 int LedTextScroller::write_some(const std::string& buf)
 {
-    return this->write_some(buf.c_str(), buf.size());
+    return this->write_some((buf+this->end_of_line_char()).c_str(), buf.size()+1);
 }
 
 int LedTextScroller::write_some(const char* buf, const int& size)
 {
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
     boost::system::error_code ec;
 
     if (!port_)
@@ -80,13 +83,18 @@ int LedTextScroller::write_some(const char* buf, const int& size)
     if (size == 0)
         return 0;
 
+    std::cout << "ok !" << std::endl;
     return port_->write_some(boost::asio::buffer(buf, size), ec);
 }
 
 void LedTextScroller::async_read_some()
 {
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
     if (!port_ || !port_->is_open())
+    {
+        std::cerr << "port not open" << std::endl;
         return;
+    }
 
     boost::asio::async_read_until(*port_,
                                   buffer_,
@@ -99,7 +107,7 @@ void LedTextScroller::async_read_some()
 
 void LedTextScroller::on_receive(const boost::system::error_code& ec, size_t bytes_transferred)
 {
-    // spdlog::debug(__PRETTY_FUNCTION__);
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
     if (!port_ || !port_->is_open())
         return;
     if (ec)
@@ -109,8 +117,7 @@ void LedTextScroller::on_receive(const boost::system::error_code& ec, size_t byt
     }
 
     auto str = std::string((char*)buffer_.data().data(), bytes_transferred);
-
-    // spdlog::info("LedTextScroller::on_receive() : " + str);
+    std::cout << "LedTextScroller::on_receive() : " << str << std::endl;
 
     buffer_.consume(bytes_transferred);
 
