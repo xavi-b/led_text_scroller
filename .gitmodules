@@ -1,3 +1,6 @@
 [submodule "linux/third-party/libusbp"]
 	path = linux/third-party/libusbp
 	url = https://github.com/pololu/libusbp
+[submodule "arduino/RGB-matrix-Panel"]
+	path = arduino/RGB-matrix-Panel
+	url = git@github.com:xavi-b/RGB-matrix-Panel.git

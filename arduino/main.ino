@@ -52,12 +52,13 @@ String msg  = "";
 
 void readSerialPort()
 {
-    msg = "";
     if (Serial.available())
     {
+        msg = "";
         delay(10);
         msg = Serial.readStringUntil('\n');
         Serial.flush();
+        sendData();
     }
 }
 
@@ -82,9 +83,6 @@ void loop()
 {
     readSerialPort();
 
-    if (msg != "")
-        sendData();
-
     // Clear background
     matrix.fillScreen(0);
 
@@ -92,7 +90,7 @@ void loop()
     matrix.setTextColor(matrix.ColorHSV(hue, 255, 255, true));
     matrix.setCursor(textX, 1);
     // matrix.print(F2(str));
-    matrix.print(msg.c_str());
+    matrix.print(msg);
 
     // Move text left (w/wrap), increase hue
     if ((--textX) < textMin)
@@ -101,10 +99,7 @@ void loop()
     if (hue >= 1536)
         hue -= 1536;
 
-#if !defined(__AVR__)
-    // On non-AVR boards, delay slightly so screen updates aren't too quick.
-    delay(20);
-#endif
+    delay(200);
 
     // Update display
     matrix.swapBuffers(false);
