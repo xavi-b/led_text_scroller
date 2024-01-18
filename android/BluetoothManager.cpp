@@ -36,7 +36,7 @@ void BluetoothManager::sendTextMessage(QString const& message)
     if (socket->state() == QBluetoothSocket::SocketState::ConnectedState)
     {
         emit log("Sending message: " + message);
-        socket->write(message.toUtf8());
+        socket->write(message.toUtf8() + '\n');
     }
     else
     {
