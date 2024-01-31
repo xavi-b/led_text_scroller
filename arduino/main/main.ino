@@ -29,26 +29,17 @@
 // Last parameter = 'true' enables double-buffering, for flicker-free,
 // buttery smooth animation.  Note that NOTHING WILL SHOW ON THE DISPLAY
 // until the first call to swapBuffers().  This is normal.
-RGBmatrixPanel matrix(A, B, C, CLK, LAT, OE, true, 2);
+RGBmatrixPanel matrix(A, B, C, CLK, LAT, OE, true, 3);
 
-// Similar to F(), but for PROGMEM string pointers rather than literals
-#define F2(progmem_ptr) (const __FlashStringHelper*)progmem_ptr
-
-const char str[] PROGMEM = "Adafruit 16x32 RGB LED Matrix";
-int16_t    textX = matrix.width(), textMin = sizeof(str) * -12, hue = 0;
-
-int8_t ball[3][4] = {{3, 0, 1, 1}, // Initial X,Y pos & velocity for 3 bouncy balls
-                     {17, 15, 1, -1},
-                     {27, 4, -1, 1}};
-
-static const uint16_t PROGMEM ballcolor[3] = {
-    0x0080, // Green=1
-    0x0002, // Blue=1
-    0x1000  // Red=1
-};
+int16_t textX = matrix.width();
+int16_t textMin = 0;
+int16_t x1 = 0;
+int16_t y1 = 0;
+uint16_t w = 0;
+uint16_t h = 0;
 
 String name = "Arduino";
-String msg  = "Salut poulet";
+String msg  = "Salut !";
 
 void readSerialPort()
 {
@@ -58,6 +49,8 @@ void readSerialPort()
         msg = "";
         delay(10);
         msg = Serial.readStringUntil('\n');
+        matrix.getTextBounds(msg, 0, 0, &x1, &y1, &w, &h);
+        textMin = w * -1;
         Serial.flush();
         sendData();
     }
@@ -78,6 +71,8 @@ void setup()
     matrix.begin();
     matrix.setTextWrap(false); // Allow text to run off right edge
     matrix.setTextSize(2);
+    matrix.getTextBounds(msg, 0, 0, &x1, &y1, &w, &h);
+    textMin = w * -1;
 }
 
 void loop()
@@ -86,22 +81,22 @@ void loop()
 
     // Clear background
     matrix.fillScreen(0);
+//    matrix.fillRect(0, 0, 33, 16, 0x00ff);
+//    matrix.fillRect(32, 0, 32, 16, 0x0ff0);
+//    matrix.fillRect(64, 0, 32, 16, 0xff00);
 
     // Draw big scrolly text on top
-    matrix.setTextColor(matrix.ColorHSV(hue, 255, 255, true));
+    matrix.setTextColor(matrix.Color888(0, 0, 255));
     matrix.setCursor(textX, 1);
-    // matrix.print(F2(str));
     matrix.print(msg);
+    matrix.drawPixel(0, 0, 0);
 
-    // Move text left (w/wrap), increase hue
+    // Move text left (w/wrap)
     if ((--textX) < textMin)
         textX = matrix.width();
-    hue += 7;
-    if (hue >= 1536)
-        hue -= 1536;
 
-    delay(100);
+    delay(50);
 
     // Update display
-    matrix.swapBuffers(false);
+    matrix.swapBuffers(true);
 }
