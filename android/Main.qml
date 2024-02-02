@@ -57,6 +57,7 @@ Window {
                 id: textField
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                inputMethodHints: Qt.ImhNoPredictiveText
             }
 
             Button {

@@ -31,6 +31,10 @@ target_link_libraries(app${PROJECT_NAME}
     Qt6::Bluetooth
 )
 
+set_target_properties(app${PROJECT_NAME} PROPERTIES QT_ANDROID_PACKAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/android)
+# set_target_properties(app${PROJECT_NAME} PROPERTIES OUTPUT_NAME BandeauLED)
+qt_finalize_target(app${PROJECT_NAME})
+
 include(GNUInstallDirs)
 install(TARGETS app${PROJECT_NAME}
     BUNDLE DESTINATION .
