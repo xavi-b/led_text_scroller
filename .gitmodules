@@ -4,3 +4,6 @@
 [submodule "arduino/RGB-matrix-Panel"]
 	path = arduino/RGB-matrix-Panel
 	url = git@github.com:xavi-b/RGB-matrix-Panel.git
+[submodule "arduino/Adafruit-GFX-Library"]
+	path = arduino/Adafruit-GFX-Library
+	url = git@github.com:joeycastillo/Adafruit-GFX-Library.git
